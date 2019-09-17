@@ -544,6 +544,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         
         var request = request
         request.httpBodyStream = stream
+        request.setValue("\(size)", forHTTPHeaderField: "Content-Length")
         let task = session.uploadTask(withStreamedRequest: request)
         self.upload_task(targetPath, progress: progress, task: task, operation: operation, completionHandler: completionHandler)
         
