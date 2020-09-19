@@ -50,11 +50,11 @@ open class FTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOpera
     public let mode: Mode
     
     fileprivate var _session: URLSession!
-    internal var sessionDelegate: SessionDelegate?
+    internal var sessionDelegate: FPSessionDelegate?
     public var session: URLSession {
         get {
             if _session == nil {
-                self.sessionDelegate = SessionDelegate(fileProvider: self)
+                self.sessionDelegate = FPSessionDelegate(fileProvider: self)
                 let config = URLSessionConfiguration.default
                 _session = URLSession(configuration: config, delegate: sessionDelegate as URLSessionDelegate?, delegateQueue: self.operation_queue)
                 _session.sessionDescription = UUID().uuidString
@@ -64,12 +64,12 @@ open class FTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOpera
         }
         
         set {
-            assert(newValue.delegate is SessionDelegate, "session instances should have a SessionDelegate instance as delegate.")
+            assert(newValue.delegate is FPSessionDelegate, "session instances should have a FPSessionDelegate instance as delegate.")
             _session = newValue
             if _session.sessionDescription?.isEmpty ?? true {
                 _session.sessionDescription = UUID().uuidString
             }
-            self.sessionDelegate = newValue.delegate as? SessionDelegate
+            self.sessionDelegate = newValue.delegate as? FPSessionDelegate
             initEmptySessionHandler(_session.sessionDescription!)
         }
     }
