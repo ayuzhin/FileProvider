@@ -35,11 +35,11 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
     public var validatingCache: Bool
     
     fileprivate var _session: URLSession!
-    internal fileprivate(set) var sessionDelegate: SessionDelegate?
+    internal fileprivate(set) var sessionDelegate: FPSessionDelegate?
     public var session: URLSession {
         get {
             if _session == nil {
-                self.sessionDelegate = SessionDelegate(fileProvider: self)
+                self.sessionDelegate = FPSessionDelegate(fileProvider: self)
                 let config = URLSessionConfiguration.default
                 config.urlCache = cache
                 config.requestCachePolicy = .returnCacheDataElseLoad
@@ -51,12 +51,12 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         }
         
         set {
-            assert(newValue.delegate is SessionDelegate, "session instances should have a SessionDelegate instance as delegate.")
+            assert(newValue.delegate is FPSessionDelegate, "session instances should have a FPSessionDelegate instance as delegate.")
             _session = newValue
             if _session.sessionDescription?.isEmpty ?? true {
                 _session.sessionDescription = UUID().uuidString
             }
-            self.sessionDelegate = newValue.delegate as? SessionDelegate
+            self.sessionDelegate = newValue.delegate as? FPSessionDelegate
             initEmptySessionHandler(_session.sessionDescription!)
         }
     }
