@@ -226,7 +226,7 @@ extension OneDriveFileProvider {
         let finalRange: Range<Int64>
         if let range = range {
             if range.count > maximumSize {
-                finalRange = range.lowerBound..<(range.upperBound + maximumSize)
+                finalRange = range.lowerBound..<(range.lowerBound + maximumSize)
             } else {
                 finalRange = range
             }
@@ -251,7 +251,7 @@ extension OneDriveFileProvider {
         dictionary["source"] = operation.source
         dictionary["dest"] = operation.destination
         dictionary["uploadedBytes"] = NSNumber(value: uploadedSoFar)
-        dictionary["totalBytes"] = NSNumber(value: data.count)
+        dictionary["totalBytes"] = NSNumber(value: size)
         task.taskDescription = String(jsonDictionary: dictionary)
         sessionDelegate?.observerProgress(of: task, using: progress, kind: .upload)
         progress.cancellationHandler = { [weak task, weak self] in
@@ -295,7 +295,7 @@ extension OneDriveFileProvider {
                 let comp = firstRange.components(separatedBy: "-")
                 let lower = comp.first.flatMap(Int64.init) ?? uploaded
                 let upper = comp.dropFirst().first.flatMap(Int64.init) ?? Int64.max
-                let range = Range<Int64>(uncheckedBounds: (lower: lower, upper: upper))
+                let range = Range<Int64>(uncheckedBounds: (lower: lower, upper: upper + 1))
                 self.upload_multipart(url: url, operation: operation, size: size, range: range, uploadedSoFar: uploaded, progress: progress,
                                       dataProvider: dataProvider, completionHandler: completionHandler)
                 return
