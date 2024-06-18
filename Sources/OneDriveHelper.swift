@@ -221,7 +221,6 @@ extension OneDriveFileProvider {
         let maximumSize: Int64 = 10_485_760 // Recommended by OneDrive documentations and divides evenly by 320 KiB, max 60MiB.
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
-        request.setValue(authentication: self.credential, with: .oAuth2)
         
         let finalRange: Range<Int64>
         if let range = range {
