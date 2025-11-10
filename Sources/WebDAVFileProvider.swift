@@ -65,6 +65,7 @@ open class WebDAVFileProvider: HTTPFileProvider, FileProviderSharing {
         copy.fileOperationDelegate = self.fileOperationDelegate
         copy.useCache = self.useCache
         copy.validatingCache = self.validatingCache
+        copy.credentialType = self.credentialType
         return copy
     }
     
